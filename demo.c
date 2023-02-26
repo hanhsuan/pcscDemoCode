@@ -40,7 +40,7 @@ int main() {
           .dwProtocol = (unsigned long)active_protocol,
           .cbPciLength = sizeof(SCARD_IO_REQUEST)};
       BYTE test_command[] = {0x00, 0xB0, 0x00, 0x00, 0x10}; // read IC card serial number
-      LPDWORD length = (LPDWORD)4096;
+      DWORD length = 4096;
       LPBYTE buffer = (LPBYTE)calloc((size_t)length, sizeof(LPBYTE));
       result = SCardTransmit((SCARDHANDLE)card, &s_card_io_request,
                              test_command, sizeof(test_command),
