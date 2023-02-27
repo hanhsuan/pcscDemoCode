@@ -11,9 +11,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: TheMrMilchmann/setup-msvc-dev@v2
-        with:
-           arch: x86
       - name: Install pcsclit for linux
         working-directory: ${{github.workspace}}
         if: matrix.os == 'ubuntu-latest'
