@@ -11,6 +11,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: TheMrMilchmann/setup-msvc-dev@v2
+        with:
+           arch: x86
       - name: Install pcsclit for linux
         working-directory: ${{github.workspace}}
         if: matrix.os == 'ubuntu-latest'
@@ -23,7 +26,6 @@ jobs:
         if: matrix.os != 'windows-latest'
         run: cmake --build build --target all --config Release
       - name: Build Project (windows)
-        uses: microsoft/setup-msbuild@v1.1
         working-directory: ${{github.workspace}}
         if: matrix.os == 'windows-latest'
         run: cmake --build build --target ALL_BUILD --config Release
