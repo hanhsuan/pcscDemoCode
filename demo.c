@@ -4,15 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef SCARD_AUTOALLOCATE
-#define SCARD_AUTOALLOCATE (DWORD)(-1)
-#endif
-
 int main() {
   SCARDCONTEXT s_card_ctx = 0;
-  DWORD reader_names_len = SCARD_AUTOALLOCATE;
+  DWORD reader_names_len = 1024;
   LPSTR reader_names = NULL;
-  int reture_value = EXIT_SUCCESS;
+  int return_value = EXIT_SUCCESS;
   long result =
       SCardEstablishContext(SCARD_SCOPE_SYSTEM, NULL, NULL, &s_card_ctx);
 
@@ -22,7 +18,13 @@ int main() {
   }
 
   // Find out reader qty.
-  result = SCardListReaders(s_card_ctx, NULL, (LPSTR)&reader_names,
+  reader_names = (LPSTR)calloc(reader_names_len, sizeof(char));
+  if (reader_names == NULL) {
+    printf("Internal error\n");
+    return_value = EXIT_FAILURE;
+    goto FREE;
+  }
+  result = SCardListReaders(s_card_ctx, NULL, (LPSTR)reader_names,
                             (LPDWORD)&reader_names_len);
   if (result != SCARD_S_SUCCESS) {
     printf("SCardListReaders Fail : %08lX\n", result);
@@ -30,7 +32,7 @@ int main() {
   } else {
     LPSTR reader_name = reader_names;
     SCARDHANDLE card;
-    LPDWORD active_protocol;
+    DWORD active_protocol;
     while ('\0' != *reader_name) {
       printf("Reader: %s\n", reader_name);
       result = SCardConnect(s_card_ctx, reader_name, SCARD_SHARE_EXCLUSIVE,
@@ -38,7 +40,7 @@ int main() {
                             (LPSCARDHANDLE)&card, (LPDWORD)&active_protocol);
       if (result != SCARD_S_SUCCESS) {
         printf("SCardConnect Fail : %08lX\n", result);
-        reture_value = EXIT_FAILURE;
+        return_value = EXIT_FAILURE;
         goto FREE;
       }
       SCARD_IO_REQUEST s_card_io_request = {
@@ -64,7 +66,7 @@ int main() {
         result = SCardDisconnect((SCARDHANDLE)card, SCARD_UNPOWER_CARD);
         if (result != SCARD_S_SUCCESS) {
           printf("SCardDisconnect Fail : %08lX\n", result);
-          reture_value = EXIT_FAILURE;
+          return_value = EXIT_FAILURE;
         }
         free(buffer);
         reader_name =
@@ -74,7 +76,7 @@ int main() {
   }
 
 FREE:
-  SCardFreeMemory(s_card_ctx, reader_names);
+  free(reader_names);
   SCardReleaseContext(s_card_ctx);
-  return reture_value;
+  return return_value;
 }
