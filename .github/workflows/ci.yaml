@@ -18,9 +18,14 @@ jobs:
         working-directory: ${{github.workspace}}
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libpcsclite-dev -y
-      - name: Create build directory and run CMake
+      - name: Create build directory and run CMake (non windows)
         working-directory: ${{github.workspace}}
+        if: matrix.os != 'windows-latest'
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Create build directory and run CMake (windows)
+        working-directory: ${{github.workspace}}
+        if: matrix.os == 'windows-latest'
+        run: cmake -A Win32 -S . -B build -DCMAKE_BUILD_TYPE=Release
       - name: Build Project (non windows)
         working-directory: ${{github.workspace}}
         if: matrix.os != 'windows-latest'
