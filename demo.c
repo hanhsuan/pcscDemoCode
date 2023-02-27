@@ -1,11 +1,11 @@
-#include <PCSC/winscard.h>
+#include <winscard.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int main() {
   SCARDCONTEXT s_card_ctx = 0;
-  LPDWORD reader_names_len = (LPDWORD)SCARD_AUTOALLOCATE;
+  DWORD reader_names_len = SCARD_AUTOALLOCATE;
   LPSTR reader_names = NULL;
   int reture_value = EXIT_SUCCESS;
   long result =
