@@ -1,0 +1,34 @@
+# ref: https://github.com/FreeRDP/FreeRDP/blob/master/cmake/FindPCSC.cmake
+# - Try to find PCSC
+# Once done this will define
+#  PCSC_FOUND - pcsc was found
+#  PCSC_INCLUDE_DIRS - pcsc include directories
+#  PCSC_LIBRARIES - libraries needed for linking
+
+IF(WIN32)
+	SET(PCSC_LIB_NAME "winscard")
+	SET(PCSC_DIFF_HEADER_FILE "wintype.h")
+	SET(PCSC_DIFF_LIBRARY "")
+ELSE()
+	SET(PCSC_LIB_FILE "libpcsclite")
+	SET(PCSC_DIFF_HEADER_FILE "pcsclite.h")
+	SET(PCSC_DIFF_LIBRARY "pcsclite")
+ENDIF()
+
+IF(PKG_CONFIG_FOUND)
+	pkg_check_modules(PCSC QUIET ${PCSC_LIB_NAME})
+ELSEIF(NOT MSVC)
+        INCLUDE(CMakeFindDependencyMacro)
+ENDIF()
+
+FIND_PATH(PCSC_INCLUDE_DIR ${PCSC_DIFF_HEADER_FILE} WinSCard.h
+	HINTS ${PCSC_INCLUDEDIR} ${PCSC_INCLUDE_DIRS}
+	PATH_SUFFIXES PCSC)
+
+FIND_LIBRARY(PCSC_LIBRARY NAMES PCSC WinSCard ${PCSC_DIFF_LIBRARY} 
+	HINTS ${PCSC_LIBDIR} ${PCSC_LIBRARY_DIRS})
+
+SET(PCSC_LIBRARIES ${PCSC_LIBRARY})
+SET(PCSC_INCLUDE_DIR ${PCSC_INCLUDE_DIR})
+
+MARK_AS_ADVANCED(PCSC_INCLUDE_DIR PCSC_LIBRARY)
