@@ -23,6 +23,7 @@ jobs:
         if: matrix.os != 'windows-latest'
         run: cmake --build build --target all --config Release
       - name: Build Project (windows)
+        uses: microsoft/setup-msbuild@v1.1
         working-directory: ${{github.workspace}}
         if: matrix.os == 'windows-latest'
         run: cmake --build build --target ALL_BUILD --config Release
