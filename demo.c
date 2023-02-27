@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifndef SCARD_AUTOALLOCATE
+#define SCARD_AUTOALLOCATE (DWORD)(-1)
+#endif
+
 int main() {
   SCARDCONTEXT s_card_ctx = 0;
   DWORD reader_names_len = SCARD_AUTOALLOCATE;
@@ -25,7 +29,7 @@ int main() {
     return EXIT_FAILURE;
   } else {
     LPSTR reader_name = reader_names;
-    LPSCARDHANDLE card;
+    SCARDHANDLE card;
     LPDWORD active_protocol;
     while ('\0' != *reader_name) {
       printf("Reader: %s\n", reader_name);
