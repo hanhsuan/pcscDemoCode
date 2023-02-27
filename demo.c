@@ -51,6 +51,11 @@ int main() {
       BYTE test_command[] = {0x00, 0xB0, 0x00, 0x00, 0x10}; // read IC card serial number
       DWORD length = 4096;
       LPBYTE buffer = (LPBYTE)calloc((size_t)length, sizeof(LPBYTE));
+      if (buffer == NULL) {
+        printf("Internal error\n");
+        return_value = EXIT_FAILURE;
+        goto FREE;
+      }
       result = SCardTransmit((SCARDHANDLE)card, &s_card_io_request,
                              test_command, sizeof(test_command),
                              &s_card_io_request, buffer, (LPDWORD)&length);
