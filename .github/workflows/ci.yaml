@@ -11,6 +11,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Install pcsclit for linux
+        working-directory: ${{github.workspace}}
+        if: matrix.os == 'ubuntu-latest'
+        run: apt-get install libpcsclite-dev -y
       - name: Create build directory and run CMake
         working-directory: ${{github.workspace}}
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
