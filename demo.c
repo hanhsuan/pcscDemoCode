@@ -1,5 +1,7 @@
 #include <winscard.h>
+#ifndef WIN32
 #include <wintypes.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
