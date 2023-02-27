@@ -6,7 +6,7 @@ jobs:
   compile-test:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -15,19 +15,23 @@ jobs:
         working-directory: ${{github.workspace}}
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libpcsclite-dev -y
-      - name: Create build directory and run CMake (non windows)
+      - name: Create build directory and run CMake
         working-directory: ${{github.workspace}}
-        if: matrix.os != 'windows-latest'
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-      - name: Create build directory and run CMake (windows)
-        working-directory: ${{github.workspace}}
-        if: matrix.os == 'windows-latest'
-        run: cmake -A Win32 -S . -B build -DCMAKE_BUILD_TYPE=Release
       - name: Build Project (non windows)
         working-directory: ${{github.workspace}}
-        if: matrix.os != 'windows-latest'
         run: cmake --build build --target all --config Release
+  compile-test-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: TheMrMilchmann/setup-msvc-dev@v2
+        with:
+           arch: x86
+      - name: Create build directory and run CMake 
+        working-directory: ${{github.workspace}}
+        run: cmake -A Win32 -S . -B build -DCMAKE_BUILD_TYPE=Release
       - name: Build Project (windows)
         working-directory: ${{github.workspace}}
-        if: matrix.os == 'windows-latest'
         run: cmake --build build --target ALL_BUILD --config Release
