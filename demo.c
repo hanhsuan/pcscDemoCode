@@ -30,7 +30,8 @@ int main() {
                             (LPDWORD)&reader_names_len);
   if (result != SCARD_S_SUCCESS) {
     printf("SCardListReaders Fail : %08lX\n", result);
-    return EXIT_FAILURE;
+    return_value = EXIT_FAILURE;
+    goto FREE;
   } else {
     LPSTR reader_name = reader_names;
     SCARDHANDLE card;
