@@ -25,6 +25,9 @@ cmake --build build --target ALL_BUILD PACKAGE --config Release
 ### Linux
 Install pcsclite and pcscd first
 
+Before [version 1.9.8](https://github.com/LudovicRousseau/PCSC/issues/55), Memory leaks in ScardEstablishContext issue hasn't been fixed and version 1.9.9 would be provided since Ubuntu 23.04.
+You could compile and install to solve this issue manually, or download precompiled [debian](https://launchpad.net/ubuntu/lunar/+source/pcsc-lite) for debian-based.
+
 For debian-based
 ```shell
 sudo apt install libpcsclite-dev pcscd
