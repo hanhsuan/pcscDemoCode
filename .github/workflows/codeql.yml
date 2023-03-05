@@ -41,6 +41,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Install pcsclit for linux
+      run: sudo apt-get install libpcsclite-dev -y
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
